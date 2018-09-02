@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibCECService", "LibCECService\LibCECService.csproj", "{A545274C-69AD-4078-8E52-93445ECE0E14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibCECWrapper", "LibCECWrapper\LibCECWrapper.csproj", "{D1B94C62-E956-4E82-B805-053AE5FB8BD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibCECServiceInstaller", "LibCECServiceInstaller\LibCECServiceInstaller.csproj", "{707E8CD5-4364-4151-8DF5-D639E50AEECE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A545274C-69AD-4078-8E52-93445ECE0E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A545274C-69AD-4078-8E52-93445ECE0E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A545274C-69AD-4078-8E52-93445ECE0E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A545274C-69AD-4078-8E52-93445ECE0E14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1B94C62-E956-4E82-B805-053AE5FB8BD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1B94C62-E956-4E82-B805-053AE5FB8BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{707E8CD5-4364-4151-8DF5-D639E50AEECE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{707E8CD5-4364-4151-8DF5-D639E50AEECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{707E8CD5-4364-4151-8DF5-D639E50AEECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{707E8CD5-4364-4151-8DF5-D639E50AEECE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2F5F0B42-152E-4862-8DEE-655A6952CD06}
+	EndGlobalSection
+EndGlobal
