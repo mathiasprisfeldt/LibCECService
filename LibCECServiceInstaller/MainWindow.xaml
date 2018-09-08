@@ -26,13 +26,30 @@
                 <Button Grid.Column="2" Name="InstallUtilDirBtn" Margin="5 0 0 0" Padding="5" Click="Button_Click">Browse</Button>
             </Grid>
         </Border>
+        
+        <Border BorderBrush="#FFDDDDDD" BorderThickness="2" Margin="5" Padding="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Height="28" Margin="0 0 2.5 0" Click="Button_Click_1">Install</Button>
+                <Button Grid.Column="1" Height="28" Margin="2.5 0 0 0" Click="Button_Click_2">Uninstall</Button>
+            </Grid>
+        </Border>
 
+        <Label Margin="0 15 0 0">Test CEC Commands:</Label>
         <Border BorderBrush="#FFDDDDDD" BorderThickness="2" Margin="5" Padding="5">
-            <Button Height="28" Click="Button_Click_1">Install</Button>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Height="28" Margin="0 0 2.5 0" Click="Button_Click_3">Turn On</Button>
+                <Button Grid.Column="1" Height="28" Margin="2.5 0 0 0" Click="Button_Click_4">Turn Off</Button>
+            </Grid>
         </Border>
-        <Border BorderBrush="#FFDDDDDD" BorderThickness="2" Margin="5" Padding="5">
-            <Button Height="28" Click="Button_Click_2">Uninstall</Button>
-        </Border>
+
     </StackPanel>
 
 </Window>

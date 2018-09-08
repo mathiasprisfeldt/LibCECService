@@ -1,94 +1,49 @@
 ﻿using System;
-using System.Configuration.Install;
-using System.IO;
-using System.Reflection;
-using System.ServiceProcess;
-using LibCECWrapper;
+using System.Net.Mime;
+using Topshelf;
 
 namespace LibCECService
 {
     public static class Program
     {
-        public const string SERVICE_NAME = "LibCECService";
-
-        private static LibCECClient _client;
-
         private static void Main(string[] args)
         {
-            if (!Environment.UserInteractive)
+            HostFactory.Run(configurator =>
             {
-                using (var service = new MyService())
+                configurator.Service<Service>(service =>
                 {
-                    ServiceBase.Run(service);
-                }
-            }
-            else
-            {
-                if (args.Length > 0)
-                {
-                    switch (args[0])
-                    {
-                        case "-install":
-                            InstallService();
-                            break;
-                        case "-uninstall":
-                            UnInstallService();
-                            break;
-                    }
+                    service.ConstructUsing(settings => new Service());
+                    service.WhenStarted((service1, control) => service1.Start(control));
+                    service.WhenStopped((service1, control) => service1.Stop(control));
+                    service.WhenCustomCommandReceived((service1, control, arg3) => service1.Command(arg3));
+                });
 
-                    Console.ReadKey();
+                configurator.SetServiceName("LibCECService");
+                configurator.SetDisplayName("LibCECService");
+                configurator.RunAsLocalSystem();
+                configurator.StartAutomatically();
+            });
+            
+            //This code only gets executed if the program is not run as a real service.
+            var localService = new Service();
+
+            while (true)
+            {
+                string input = Console.ReadLine();
+
+                if (input == String.Empty)
+                    continue;
+
+                if (input == "exit")
                     return;
-                }
 
-                Start(args);
-
-                char currKey;
-                while ((currKey = Console.ReadKey(true).KeyChar) != Convert.ToChar(27))
-                {
-                    var result = int.TryParse(currKey.ToString(), out var cmd);
-                    if (result)
-                        Command(cmd);
-                }
-
-                Stop();
+                var cmdIsInt = int.TryParse(input, out var cmd);
+                if (cmdIsInt)
+                    localService.Command(cmd);
+                else
+                    localService.Command(input);
             }
         }
 
-        public static void Start(string[] args)
-        {
-            if (!Environment.UserInteractive)
-            {
-                var logName = $@"{Directory.GetCurrentDirectory()}\{DateTime.Now:yyyy-MM-dd - hh;mm tt}.log";
-                var sw = new StreamWriter(logName) {AutoFlush = true};
-                Console.SetOut(sw);
-            }
-
-            Console.WriteLine("Service started.");
-
-            _client = LibCECClient.Create();
-        }
-
-        public static void Stop()
-        {
-            Console.WriteLine("Service stopped.");
-
-            _client.Close();
-        }
-
-        public static void Command(int command)
-        {
-            Console.WriteLine($"Received Command: {command}");
-        }
-
-        public static void InstallService()
-        {
-            Console.WriteLine("Installing LibCECService...");
-            ManagedInstallerClass.InstallHelper(new[] {Assembly.GetExecutingAssembly().Location});
-        }
-
-        public static void UnInstallService()
-        {
-            ManagedInstallerClass.InstallHelper(new[] {"/u", Assembly.GetExecutingAssembly().Location});
-        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
@@ -95,11 +96,40 @@ namespace LibCECServiceInstaller
                 {
                     FileName = serviceExePath,
                     UseShellExecute = false,
-                    Arguments = install ? "-install" : "-uninstall"
+                    Arguments = install ? "install" : "uninstall"
                 }
             };
 
             proc.Start();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            RunCmd(130);
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            RunCmd(129);
+        }
+
+        private void RunCmd(int cmd)
+        {
+            try
+            {
+                ServiceController sc = new ServiceController("LibCECService", Environment.MachineName);
+                ServiceControllerPermission scp = new ServiceControllerPermission(ServiceControllerPermissionAccess.Control, Environment.MachineName, "LibCECService");//this will grant permission to access the Service
+                scp.Assert();
+                sc.Refresh();
+                sc.ExecuteCommand(cmd);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message,
+                    "LibCEC Service Installer",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
         }
     }
 }

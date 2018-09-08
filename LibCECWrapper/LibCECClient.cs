@@ -5,7 +5,7 @@ namespace LibCECWrapper
 {
     public class LibCECClient : CecCallbackMethods
     {
-        private readonly LibCecSharp _lib;
+        public readonly LibCecSharp Lib;
         private readonly int _logLevel;
 
         public LibCECClient()
@@ -23,11 +23,11 @@ namespace LibCECWrapper
 
             _logLevel = (int) CecLogLevel.All;
 
-            _lib = new LibCecSharp(config);
-            _lib.InitVideoStandalone();
+            Lib = new LibCecSharp(config);
+            Lib.InitVideoStandalone();
 
             Console.WriteLine("LibCECClient: Successfully created LibCEC Parser with version: " +
-                              _lib.VersionToString(config.ServerVersion));
+                              Lib.VersionToString(config.ServerVersion));
         }
 
         public static LibCECClient Create(int timeout = int.MaxValue)
@@ -54,7 +54,7 @@ namespace LibCECWrapper
 
         public bool Connect(int timeout)
         {
-            var adapters = _lib.FindAdapters(string.Empty);
+            var adapters = Lib.FindAdapters(string.Empty);
 
             if (adapters.Length > 0) return Connect(adapters[0].ComPort, timeout);
 
@@ -64,12 +64,12 @@ namespace LibCECWrapper
 
         public bool Connect(string port, int timeout)
         {
-            return _lib.Open(port, timeout);
+            return Lib.Open(port, timeout);
         }
 
         public void Close()
         {
-            _lib.Close();
+            Lib.Close();
         }
     }
 }
