@@ -8,12 +8,15 @@ namespace LibCECService
     {
         private static void Main(string[] args)
         {
-            HostFactory.Run(configurator =>
+            var rc = HostFactory.Run(configurator =>
             {
                 configurator.Service<Service>(service =>
                 {
-                    service.ConstructUsing(settings => new Service());
+                    Service newService = new Service();
+
+                    service.ConstructUsing(settings => newService);
                     service.WhenStarted((service1, control) => service1.Start(control));
+                    service.AfterStartingService(context => newService.AfterStartingService(context));
                     service.WhenStopped((service1, control) => service1.Stop(control));
                     service.WhenCustomCommandReceived((service1, control, arg3) => service1.Command(arg3));
                 });
@@ -23,26 +26,9 @@ namespace LibCECService
                 configurator.RunAsLocalSystem();
                 configurator.StartAutomatically();
             });
-            
-            //This code only gets executed if the program is not run as a real service.
-            var localService = new Service();
 
-            while (true)
-            {
-                string input = Console.ReadLine();
-
-                if (input == String.Empty)
-                    continue;
-
-                if (input == "exit")
-                    return;
-
-                var cmdIsInt = int.TryParse(input, out var cmd);
-                if (cmdIsInt)
-                    localService.Command(cmd);
-                else
-                    localService.Command(input);
-            }
+            var exitCode = (int)Convert.ChangeType(rc, rc.GetTypeCode());
+            Environment.ExitCode = exitCode;
         }
 
     }

@@ -20,6 +20,7 @@ namespace LibCECWrapper
             config.ActivateSource = true;
             config.AdapterType = CecAdapterType.PulseEightExternal;
             config.TvVendor = CecVendorId.Sony;
+            config.MonitorOnlyClient = false;
 
             _logLevel = (int) CecLogLevel.All;
 
@@ -45,7 +46,7 @@ namespace LibCECWrapper
             if (((int) message.Level & _logLevel) == (int) message.Level)
             {
                 var strLevel = Enum.GetName(typeof(CecLogLevel), message.Level)?.ToUpper() + ":   ";
-                var strLog = $"LibCECClient: {strLevel} {message.Time,16} {message.Message}";
+                var strLog = $"LibCECClient: {strLevel} {message.Time, 16} {message.Message}";
                 Console.WriteLine(strLog);
             }
 
@@ -70,6 +71,24 @@ namespace LibCECWrapper
         public void Close()
         {
             Lib.Close();
+        }
+
+        public void Transmit(CecCommand cmd)
+        {
+            if (!Lib.IsLibCECActiveSource())
+            {
+                if (cmd.Opcode == CecOpcode.TextViewOn)
+                {
+                    Connect(Int32.MaxValue);
+                    return;
+                }
+
+                Console.WriteLine($"LibCECClient: Tried to send cmd: {cmd.Opcode}, but isn't connected to the CEC yet! " +
+                                  "Send a 'TextViewOn' to init CEC connection.");
+                return;
+            }
+
+            Lib.Transmit(cmd);
         }
     }
 }

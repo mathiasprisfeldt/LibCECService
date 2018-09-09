@@ -105,19 +105,26 @@ namespace LibCECServiceInstaller
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            RunCmd(130);
+            RunCmd(137);
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            RunCmd(129);
+            RunCmd(145);
         }
 
         private void RunCmd(int cmd)
         {
+            ServiceController sc = new ServiceController("LibCECService", Environment.MachineName);
+
+            if (sc.Status != ServiceControllerStatus.Running)
+            {
+                sc.Start();
+                sc.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromMinutes(1));
+            }
+
             try
             {
-                ServiceController sc = new ServiceController("LibCECService", Environment.MachineName);
                 ServiceControllerPermission scp = new ServiceControllerPermission(ServiceControllerPermissionAccess.Control, Environment.MachineName, "LibCECService");//this will grant permission to access the Service
                 scp.Assert();
                 sc.Refresh();
