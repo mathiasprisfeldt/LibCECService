@@ -17,10 +17,8 @@ namespace LibCECWrapper
             config.SetCallbacks(this);
             config.PhysicalAddress = 2000;
             config.HDMIPort = 2;
-            config.ActivateSource = true;
             config.AdapterType = CecAdapterType.PulseEightExternal;
             config.TvVendor = CecVendorId.Sony;
-            config.MonitorOnlyClient = false;
 
             _logLevel = (int) CecLogLevel.All;
 
