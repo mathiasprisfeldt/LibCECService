@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Threading;
 using CecSharp;
 
 namespace LibCECWrapper
 {
     public class LibCECClient : CecCallbackMethods
     {
-        public readonly LibCecSharp Lib;
+        private bool _isTurningOffTv;
+        private bool _settingActiveSource;
         private readonly int _logLevel;
+
+        public readonly LibCecSharp Lib;
 
         public LibCECClient()
         {
@@ -20,6 +24,8 @@ namespace LibCECWrapper
             config.AdapterType = CecAdapterType.PulseEightExternal;
             config.TvVendor = CecVendorId.Sony;
 
+            config.ActivateSource = false;
+            
             _logLevel = (int) CecLogLevel.All;
 
             Lib = new LibCecSharp(config);
@@ -33,7 +39,8 @@ namespace LibCECWrapper
         {
             var client = new LibCECClient();
 
-            if (client.Connect(timeout)) return client;
+            if (client.Connect(timeout))
+                return client;
 
             Console.WriteLine("LibCECClient: Could not open a connection to the CEC adapter");
             return null;
@@ -71,22 +78,37 @@ namespace LibCECWrapper
             Lib.Close();
         }
 
-        public void Transmit(CecCommand cmd)
+        public void Transmit(CecCommand cmd, bool activateSource = false)
         {
-            if (!Lib.IsLibCECActiveSource())
+            if (_settingActiveSource || _isTurningOffTv)
+                return;
+            
+            if (activateSource)
             {
-                if (cmd.Opcode == CecOpcode.TextViewOn)
-                {
-                    Connect(Int32.MaxValue);
-                    return;
-                }
+                _settingActiveSource = true;
+                Lib.SetActiveSource(CecDeviceType.Tv);
 
-                Console.WriteLine($"LibCECClient: Tried to send cmd: {cmd.Opcode}, but isn't connected to the CEC yet! " +
-                                  "Send a 'TextViewOn' to init CEC connection.");
+                /*
+                 * Since we dont know when its fully connected as a source,
+                 * we have to take a guess on when its done, if we dont do
+                 * this our next cmd wont trigger.
+                 */
+                Thread.Sleep(100);
+
+                _settingActiveSource = false;
+                Transmit(cmd);
+            }
+            
+            //First try and transmit command, if that fails try and reconnect the send again.
+            if (!Lib.Transmit(cmd) && !Lib.IsLibCECActiveSource())
+            {
+                Transmit(cmd, true);
                 return;
             }
 
-            Lib.Transmit(cmd);
+            //We need some delay if we suceeded with the transmission,
+            //else the tv will spazz out if overloaded with commands.
+            Thread.Sleep(100);
         }
     }
 }

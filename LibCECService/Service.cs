@@ -22,14 +22,14 @@ namespace LibCECService
             }
 #endif
 
-            _client = new LibCECClient();
+            _client = LibCECClient.Create();
             
             return true;
         }
 
         public bool Stop(HostControl hostControl)
         {
-            _client.Lib.StandbyDevices(CecLogicalAddress.Broadcast);
+            _client.Lib.StandbyDevices(CecLogicalAddress.Tv);
             _client.Close();
 
             if (Environment.UserInteractive)

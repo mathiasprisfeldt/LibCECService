@@ -76,6 +76,14 @@ namespace LibCECService
         /// <param name="cmd"></param>
         public static void Command(this LibCECClient client, string cmd)
         {
+            cmd = cmd.ToLower();
+            
+            if (cmd == "on")
+            {
+                client.Lib.PowerOnDevices(CecLogicalAddress.Tv);
+                return;
+            }
+
             string[] strings = Enum.GetNames(typeof(CecOpcode));
             if (!strings.Contains(cmd, StringComparer.CurrentCultureIgnoreCase))
             {
