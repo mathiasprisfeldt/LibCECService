@@ -6,7 +6,6 @@ namespace LibCECWrapper
 {
     public class LibCECClient : CecCallbackMethods
     {
-        private bool _isTurningOffTv;
         private bool _settingActiveSource;
         private readonly int _logLevel;
 
@@ -80,27 +79,27 @@ namespace LibCECWrapper
 
         public void Transmit(CecCommand cmd, bool activateSource = false)
         {
-            if (_settingActiveSource || _isTurningOffTv)
+            if (_settingActiveSource)
                 return;
             
             if (activateSource)
             {
                 _settingActiveSource = true;
-                Lib.SetActiveSource(CecDeviceType.Tv);
+                Lib.SetActiveSource(CecDeviceType.PlaybackDevice);
 
                 /*
                  * Since we dont know when its fully connected as a source,
-                 * we have to take a guess on when its done, if we dont do
-                 * this our next cmd wont trigger.
+                 * we have to take a guess on when its done, if we dont
+                 * our queued cmd wont trigger.
                  */
                 Thread.Sleep(100);
-
+                
                 _settingActiveSource = false;
                 Transmit(cmd);
             }
             
             //First try and transmit command, if that fails try and reconnect the send again.
-            if (!Lib.Transmit(cmd) && !Lib.IsLibCECActiveSource())
+            if (!Lib.Transmit(cmd) && !Lib.IsActiveSource(CecLogicalAddress.PlaybackDevice1))
             {
                 Transmit(cmd, true);
                 return;
