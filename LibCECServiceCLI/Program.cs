@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ServiceProcess;
-using System.Threading;
 
 namespace LibCECServiceCLI
 {
