@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibCECWrapper", "LibCECWrap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibCECServiceInstaller", "LibCECServiceInstaller\LibCECServiceInstaller.csproj", "{707E8CD5-4364-4151-8DF5-D639E50AEECE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibCECTests", "LibCECTests\LibCECTests.csproj", "{9051BA71-BA65-4B89-BA32-0B2311CD0E4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibCECServiceCLI", "LibCECServiceCLI\LibCECServiceCLI.csproj", "{EFFCABE5-87FA-4099-865E-84CCAEF2B16E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +44,22 @@ Global
 		{707E8CD5-4364-4151-8DF5-D639E50AEECE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{707E8CD5-4364-4151-8DF5-D639E50AEECE}.Release|x64.ActiveCfg = Release|x64
 		{707E8CD5-4364-4151-8DF5-D639E50AEECE}.Release|x64.Build.0 = Release|x64
+		{9051BA71-BA65-4B89-BA32-0B2311CD0E4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9051BA71-BA65-4B89-BA32-0B2311CD0E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9051BA71-BA65-4B89-BA32-0B2311CD0E4F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9051BA71-BA65-4B89-BA32-0B2311CD0E4F}.Debug|x64.Build.0 = Debug|Any CPU
+		{9051BA71-BA65-4B89-BA32-0B2311CD0E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9051BA71-BA65-4B89-BA32-0B2311CD0E4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9051BA71-BA65-4B89-BA32-0B2311CD0E4F}.Release|x64.ActiveCfg = Release|Any CPU
+		{9051BA71-BA65-4B89-BA32-0B2311CD0E4F}.Release|x64.Build.0 = Release|Any CPU
+		{EFFCABE5-87FA-4099-865E-84CCAEF2B16E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFFCABE5-87FA-4099-865E-84CCAEF2B16E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFFCABE5-87FA-4099-865E-84CCAEF2B16E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EFFCABE5-87FA-4099-865E-84CCAEF2B16E}.Debug|x64.Build.0 = Debug|Any CPU
+		{EFFCABE5-87FA-4099-865E-84CCAEF2B16E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFFCABE5-87FA-4099-865E-84CCAEF2B16E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFFCABE5-87FA-4099-865E-84CCAEF2B16E}.Release|x64.ActiveCfg = Release|Any CPU
+		{EFFCABE5-87FA-4099-865E-84CCAEF2B16E}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

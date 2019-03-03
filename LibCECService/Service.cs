@@ -9,28 +9,32 @@ namespace LibCECService
 {
     public class Service : ServiceControl
     {
-        private LibCECClient _client;
+        private LibCECClient client;
 
         public bool Start(HostControl hostControl)
         {
 #if DEBUG
             if (!Environment.UserInteractive)
             {
-                var logName = $@"{Directory.GetCurrentDirectory()}\{DateTime.Now:yyyy-MM-dd - hh;mm tt}.log";
+                var logDir = Directory.GetCurrentDirectory() + @"\Logs";
+
+                Directory.CreateDirectory(logDir);
+
+                var logName = $@"{logDir}\{DateTime.Now:yyyy-MM-dd - hh;mm tt}.log";
                 var sw = new StreamWriter(logName) { AutoFlush = true };
                 Console.SetOut(sw);
             }
 #endif
 
-            _client = LibCECClient.Create();
+            client = LibCECClient.Create();
             
             return true;
         }
 
         public bool Stop(HostControl hostControl)
         {
-            _client.Lib.StandbyDevices(CecLogicalAddress.Tv);
-            _client.Close();
+            client.Lib.StandbyDevices(CecLogicalAddress.Tv);
+            client.Close();
 
             if (Environment.UserInteractive)
                 Environment.Exit(0);
@@ -38,7 +42,7 @@ namespace LibCECService
             return true;
         }
 
-        public void Command(int cmd) => _client.CommandAsServiceCommand(cmd);
+        public void Command(int cmd) => client.CommandAsServiceCommand(cmd);
 
         public void AfterStartingService(HostStartedContext context)
         {
@@ -57,11 +61,11 @@ namespace LibCECService
 
                         var cmdIsInt = int.TryParse(input, out var cmd);
                         if (cmdIsInt)
-                            _client.Command(cmd);
+                            client.Command(cmd);
                         else if (input.StartsWith("0x"))
-                            _client.CommandAsHex(input);
+                            client.CommandAsHex(input);
                         else
-                            _client.Command(input);
+                            client.Command(input);
                     }
                 }
             }).Start();
