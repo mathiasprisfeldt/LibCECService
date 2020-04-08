@@ -2,10 +2,8 @@
 using System.Threading;
 using CecSharp;
 
-namespace LibCECWrapper
-{
-    public class LibCECClient : CecCallbackMethods
-    {
+namespace LibCECWrapper {
+    public class LibCECClient : CecCallbackMethods {
         private const int CMD_DELAY = 250;
 
         private bool _settingActiveSource;
@@ -13,20 +11,19 @@ namespace LibCECWrapper
 
         public readonly LibCecSharp Lib;
 
-        public LibCECClient()
-        {
+        public LibCECClient() {
             var config = new LibCECConfiguration();
             config.DeviceTypes.Types[0] = CecDeviceType.PlaybackDevice;
             config.DeviceName = "MP-S";
             config.ClientVersion = LibCECConfiguration.CurrentVersion;
             config.SetCallbacks(this);
-            config.PhysicalAddress = 2000;
-            config.HDMIPort = 2;
+            //config.PhysicalAddress = 1000;
+            config.HDMIPort = 1;
             config.AdapterType = CecAdapterType.PulseEightExternal;
-            config.TvVendor = CecVendorId.Sony;
+            config.TvVendor = CecVendorId.Philips;
 
             config.ActivateSource = false;
-            
+
             _logLevel = (int) CecLogLevel.All;
 
             Lib = new LibCecSharp(config);
@@ -36,36 +33,31 @@ namespace LibCECWrapper
                 Lib.VersionToString(config.ServerVersion));
         }
 
-        public static void Log(string msg)
-        {
+        public static void Log(string msg) {
             Console.WriteLine($"{DateTime.Now} LibCECClient: {msg}");
         }
 
-        public static LibCECClient Create(int timeout = int.MaxValue)
-        {
+        public static LibCECClient Create(int timeout = int.MaxValue) {
             var client = new LibCECClient();
 
             if (client.Connect(timeout))
                 return client;
 
-             Log("LibCECClient: Could not open a connection to the CEC adapter");
+            Log("LibCECClient: Could not open a connection to the CEC adapter");
             return null;
         }
 
-        public override int ReceiveLogMessage(CecLogMessage message)
-        {
-            if (((int) message.Level & _logLevel) == (int) message.Level)
-            {
+        public override int ReceiveLogMessage(CecLogMessage message) {
+            if (((int) message.Level & _logLevel) == (int) message.Level) {
                 var strLevel = Enum.GetName(typeof(CecLogLevel), message.Level)?.ToUpper() + ":   ";
-                var strLog = $"LibCECClient: {strLevel} {message.Time, 16} {message.Message}";
+                var strLog = $"LibCECClient: {strLevel} {message.Time,16} {message.Message}";
                 Console.WriteLine(strLog);
             }
 
             return 1;
         }
 
-        public void Transmit(CecCommand cmd, bool activateSource = false)
-        {
+        public void Transmit(CecCommand cmd, bool activateSource = false) {
             if (cmd.Opcode == CecOpcode.Standby &&
                 Lib.GetDevicePowerStatus(CecLogicalAddress.Tv) != CecPowerStatus.On)
                 return;
@@ -73,8 +65,7 @@ namespace LibCECWrapper
             if (_settingActiveSource)
                 return;
 
-            if (activateSource)
-            {
+            if (activateSource) {
                 _settingActiveSource = true;
                 Lib.SetActiveSource(CecDeviceType.PlaybackDevice);
 
@@ -84,16 +75,15 @@ namespace LibCECWrapper
                  * our queued cmd wont trigger.
                  */
                 Thread.Sleep(CMD_DELAY);
-              
-               _settingActiveSource = false;
+
+                _settingActiveSource = false;
                 Transmit(cmd);
 
                 return;
             }
-            
+
             //First try and transmit command, if that fails try and reconnect the send again.
-            if (!Lib.Transmit(cmd))
-            {
+            if (!Lib.Transmit(cmd)) {
                 Transmit(cmd, true);
                 return;
             }
@@ -103,23 +93,21 @@ namespace LibCECWrapper
             Thread.Sleep(CMD_DELAY);
         }
 
-        public bool Connect(int timeout)
-        {
+        public bool Connect(int timeout) {
             var adapters = Lib.FindAdapters(string.Empty);
 
-            if (adapters.Length > 0) return Connect(adapters[0].ComPort, timeout);
+            if (adapters.Length > 0)
+                return Connect(adapters[0].ComPort, timeout);
 
             Log("LibCECClient: Did not find any CEC adapters");
             return false;
         }
 
-        public bool Connect(string port, int timeout)
-        {
+        public bool Connect(string port, int timeout) {
             return Lib.Open(port, timeout);
         }
 
-        public void Close()
-        {
+        public void Close() {
             Lib.Close();
         }
     }
